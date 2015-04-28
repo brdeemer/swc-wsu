@@ -1,0 +1,67 @@
+---
+title: "Capstone Exercise"
+author: "Bridget"
+date: "April 28, 2015"
+output: html_document
+---
+
+Below is an example of some of the things you can do with R markdown :)  It summarizes some data from the gapminder dataset that we've been working with in the software carpentry workshop.
+
+```{r, global_knitr_options, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE)
+```
+
+```{r, load_libraries, results="hide", message="FALSE", warning=FALSE, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(knitr)
+```
+
+
+```{r,load_data, include=FALSE}
+gapminder<-read.csv("~/Desktop/swc-wsu/data/gapminder.csv")
+```
+
+```{r,filter_data, include=FALSE}
+gapminder3 <- gapminder %>%
+  filter(country %in% c("Japan","Canada","Spain"))
+```
+
+```{r,plot_gdp_cmd}
+gapminder3 %>%
+  ggplot(aes(x=year,y=gdpPercap))+
+  geom_line(color="black")+
+facet_grid(~country)
+```
+
+Canada, Japan, and Spain's per capita GDP all appear to have increased at approximately the same rate over the past 60 years.  
+
+
+```{r,2007data, include=FALSE}
+gapminder07 <- gapminder %>%
+  filter(year==2007) 
+```
+
+```{r,mean_min_max}
+gapminder07 %>% 
+  group_by(continent) %>%
+  summarize(mean= mean(lifeExp),minimum= min(lifeExp), maximum= max(lifeExp)) %>%
+  kable
+```
+
+Oceania has the highest average and minimum life expectancy of any of the continents.  Asia, however, has the highest maximum life expectancy.  Africa has the lowest mean, minimum, and maximum life expectancy.
+
+Now let's look at some histograms of all the life expectancy data...
+```{r,histogram, message=FALSE}
+gapminder %>% 
+  ggplot(aes(x=lifeExp))+
+  geom_histogram(fill="lightblue",color="black")
+```
+
+```{r,histogram2}
+gapminder %>% 
+  ggplot(aes(x=lifeExp))+
+  geom_histogram(binwidth=10,fill="lightblue",color="black")
+```
+
+When you made the bin widths wider, you can see that most countries have life expectancies between 40 and 80.
